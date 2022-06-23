@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Traits\MustVerifyMobile;
+use App\Interfaces\MustVerifyMobile as IMustVerifyMobile;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -21,6 +23,11 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'mobile_number',
+        'mobile_verify_code',
+        'mobile_attempts_left',
+        'mobile_last_attempt_date',
+        'mobile_verify_code_sent_at',
     ];
 
     /**
@@ -31,6 +38,7 @@ class User extends Authenticatable
     protected $hidden = [
         'password',
         'remember_token',
+        'mobile_verify_code',
     ];
 
     /**
@@ -40,5 +48,13 @@ class User extends Authenticatable
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
+        'number_verified_at' => 'datetime',
+        'mobile_verify_code_sent_at' => 'datetime',
+        'mobile_last_attempt_date' => 'datetime'
     ];
+
+    public function routeNotificationForVonage($notification)
+    {
+        return $this->mobile_number;
+    }
 }
